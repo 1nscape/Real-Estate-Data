@@ -1,0 +1,32 @@
+{
+  "name": "real_estate_date",
+  "version": "1.0.0",
+  "description": "Real estate data base for buyers and sellers ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1nscape/Real-Estate-Data.git"
+  },
+  "author": "\"\"",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/1nscape/Real-Estate-Data/issues"
+  },
+  "homepage": "https://github.com/1nscape/Real-Estate-Data#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-handlebars": "^6.0.7",
+    "express-sessions": "^1.0.6",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.1.1",
+    "node": "^19.6.0",
+    "nodemon": "^2.0.20",
+    "passport": "^0.6.0",
+    "sequelize": "^6.28.0"
+  }
+}
