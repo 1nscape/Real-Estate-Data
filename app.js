@@ -33,3 +33,28 @@ url = `https://realtor16.p.rapidapi.com/forsale?location=${city}&list_price-min=
 
 getData();
 });
+
+async function getData() {
+    console.log(url);
+      let response = await fetch(url, options)
+          let data = await response.json();
+          let propertyData = data.home_search.results;
+          for (var i in propertyData){
+            bathrooms = propertyData[i].description.baths;
+            bedrooms = propertyData[i].description.beds; 
+            type = propertyData[i].description.type;
+            listPrice = propertyData[i].list_price;
+            primaryPhoto = propertyData[i].primary_photo.href;
+            //address = propertyData[i].location.address.coordinate.line;
+  
+          console.log("bathrooms: " + bathrooms + " /n Bedrooms" + bedrooms + " Photo: " + primaryPhoto);
+  
+          }          
+          
+  }
+  
+  //getData();
+  
+  app.listen(3000, function(){
+    console.log("Server is running on port 3000")
+  })
