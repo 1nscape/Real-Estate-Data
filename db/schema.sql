@@ -8,8 +8,7 @@ CREATE TABLE users (
   first_Name VARCHAR(30) NOT NULL,
   last_Name VARCHAR(30) NOT NULL,
   email_address VARCHAR(30) NOT NULL,
-  phone_number INT,
-  is_buyer BOOLEAN
+  user_password VARCHAR(30)
 );
 
 CREATE TABLE houses (
@@ -17,19 +16,14 @@ CREATE TABLE houses (
   number_of_rooms INT NOT NULL,
   number_of_bathrooms INT NOT NULL,
   property_type VARCHAR(30),
-  details VARCHAR(300) NOT NULL,
-  additional_info VARCHAR(300),
-  userID INT,
-  FOREIGN KEY (userID) REFERENCES users(id)
-  ON DELETE SET NULL
+  list_price INT,
+  primary_photo VARCHAR(500)  
 );
 
-CREATE TABLE bids (
-  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  bid_price INT NOT NULL,
+CREATE TABLE favourites (
   user_id INT,
   house_id INT,
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (house_id) REFERENCES houses(id)
-  ON DELETE SET NULL 
+
 );
