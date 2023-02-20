@@ -7,15 +7,15 @@ const path = require('path'); // Set up path
 const express = require('express');
 const exphbs = require('express-handlebars');
 const session = require('express-session'); // Import express-session module 
-const routes = require('./routes'); // require for all Express routes
+const routes = require('./controllers'); // require for all Express routes
 
-const bodyParser = require("body-parser");
-let city = "";
-let mPrice, mxPrice = 0;
-let url = "";
-let photos = [];
-let listPrice, bathrooms, bedrooms = 0;
-let type, address, primaryPhoto = "";
+// const bodyParser = require("body-parser");
+// let city = "";
+// let mPrice, mxPrice = 0;
+// let url = "";
+// let photos = [];
+// let listPrice, bathrooms, bedrooms = 0;
+// let type, address, primaryPhoto = "";
 
 // Sets up the Express App
 const app = express();
@@ -45,8 +45,8 @@ app.use(session(sess));
 // Create 'Express-Handlebars' instance with a default layout
 const hbs = exphbs.create({});
 // Register `hbs` as our view engine using its bound 'engine()' function
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
 // register a custom helper for express-handlebars here
 const handlebars = require('handlebars');
 // this custom Handlebars helper returns a JQuery library string for special Date formatting
@@ -72,74 +72,74 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // more Express route setup here
-app.use(require('./routes/index'));
+app.use(require('./controllers/homeRoutes'));
 app.use(routes);
 
-app.use(bodyParser.urlencoded({extended: true}));
+// app.use(bodyParser.urlencoded({extended: true}));
 
-const options = {
-  method: 'GET',
-  headers: {
-    'X-RapidAPI-Key': 'f716193daemsh52abc8b143cda9ap1b8ab2jsn483a389e3326',
-    'X-RapidAPI-Host': 'realtor16.p.rapidapi.com'
-  }
-};
+// const options = {
+//   method: 'GET',
+//   headers: {
+//     'X-RapidAPI-Key': 'f716193daemsh52abc8b143cda9ap1b8ab2jsn483a389e3326',
+//     'X-RapidAPI-Host': 'realtor16.p.rapidapi.com'
+//   }
+// };
 
-app.get("/", function(req, res){
-    res.sendFile(__dirname + "/index.html")
-})
+// app.get("/", function(req, res){
+//     res.sendFile(__dirname + "/index.html")
+// })
 
-app.post("/",function(req, res){
-  city =req.body.cityName;
-  mPrice =req.body.minPrice;
-  mxPrice =req.body.maxPrice
-  // console.log(`${city} is the choosen city, ${mPrice} is min Price, ${mxPrice} --> you know what it is! `)
+// app.post("/",function(req, res){
+//   city =req.body.cityName;
+//   mPrice =req.body.minPrice;
+//   mxPrice =req.body.maxPrice
+//   // console.log(`${city} is the choosen city, ${mPrice} is min Price, ${mxPrice} --> you know what it is! `)
 
-url = `https://realtor16.p.rapidapi.com/forsale?location=${city}&list_price-min=${mPrice}&list_price-max=${mxPrice}`;
+// url = `https://realtor16.p.rapidapi.com/forsale?location=${city}&list_price-min=${mPrice}&list_price-max=${mxPrice}`;
 
-getData();
-});
+// getData();
+// });
 
-async function getData() {
-  console.log(url);
-    let response = await fetch(url, options)
-        let data = await response.json();
-        let propertyData = data.home_search.results;
-        for (var i in propertyData){
-          bathrooms = propertyData[i].description.baths;
-          bedrooms = propertyData[i].description.beds; 
-          type = propertyData[i].description.type;
-          listPrice = propertyData[i].list_price;
-          primaryPhoto = propertyData[i].primary_photo.href;
-          //address = propertyData[i].location.address.coordinate.line;      
-          createData(bedrooms, bathrooms, type, listPrice, primaryPhoto);
+// async function getData() {
+//   console.log(url);
+//     let response = await fetch(url, options)
+//         let data = await response.json();
+//         let propertyData = data.home_search.results;
+//         for (var i in propertyData){
+//           bathrooms = propertyData[i].description.baths;
+//           bedrooms = propertyData[i].description.beds; 
+//           type = propertyData[i].description.type;
+//           listPrice = propertyData[i].list_price;
+//           primaryPhoto = propertyData[i].primary_photo.href;
+//           //address = propertyData[i].location.address.coordinate.line;      
+//           createData(bedrooms, bathrooms, type, listPrice, primaryPhoto);
 
-        console.log("bathrooms: " + bathrooms + " /n Bedrooms" + bedrooms + " Photo: " + primaryPhoto);
-        }            
-}
+//         console.log("bathrooms: " + bathrooms + " /n Bedrooms" + bedrooms + " Photo: " + primaryPhoto);
+//         }            
+// }
 
-const {createPool} = require('mysql')
-const pool = createPool({
-  host: "localhost",
-  user: "root",
-  password : "root",
-  database: "realEstate_db",
-})
+// const {createPool} = require('mysql')
+// const pool = createPool({
+//   host: "localhost",
+//   user: "root",
+//   password : "root",
+//   database: "realEstate_db",
+// })
 
-function createData(bedrooms, bathrooms, type, listPrice, primaryPhoto){
-  // let sql = 'INSERT INTO houses (number_of_rooms, number_of_bathrooms, property_type, list_price, primary_photo) values ?'
-  let sql = 'INSERT INTO houses SET ?'
+// function createData(bedrooms, bathrooms, type, listPrice, primaryPhoto){
+//   // let sql = 'INSERT INTO houses (number_of_rooms, number_of_bathrooms, property_type, list_price, primary_photo) values ?'
+//   let sql = 'INSERT INTO houses SET ?'
 
-  const values = {number_of_rooms: bedrooms, number_of_bathrooms: bathrooms, property_type: type, list_price: listPrice, primary_photo: primaryPhoto}  
+//   const values = {number_of_rooms: bedrooms, number_of_bathrooms: bathrooms, property_type: type, list_price: listPrice, primary_photo: primaryPhoto}  
 
-  pool.query(sql, values, function(err, result){
-      if(bedrooms && bathrooms) {
-      if (err) throw err;
+//   pool.query(sql, values, function(err, result){
+//       if(bedrooms && bathrooms) {
+//       if (err) throw err;
   
-      console.log("Data Uploaded");
-    }
-  });
-}
+//       console.log("Data Uploaded");
+//     }
+//   });
+// }
 
 // start up the application and open the PORT listener
 sequelize.sync({ force: false }).then(() => {
